@@ -20,7 +20,8 @@
         $quote;
         $author;
     ?>
-    <?php if (!$_POST) { 
+    <?php 
+    if (!$_POST) { 
         foreach($quote_array as $quote_key => $csvquote) {
             if ($quote_key == $_GET['index']) {
                 $quote = $csvquote[1];
@@ -34,7 +35,17 @@
         <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
             <label for="fname">Quote:</label>
             <input type="text" name="quote" value="<?php print($quote) ?>"><br><br>
-            <p><?php print($author) ?></p>
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <select name="authors">
+                <?php foreach($authors_array as $key => $name) {
+                    $author_name = $name[0] . " " . $name[1];?>
+                    <?php if ($author_name == $author) {?>
+                        <option name="author" value="<?php echo $key; ?>" selected><?php echo $author_name ?></option>
+                    <?php } else { ?>
+                    <option name="author" value="<?php echo $key; ?>"><?php echo $author_name ?></option>
+                    <?php } 
+                } ?>
+            </select>
             <br><br>
             <input type="hidden" name="index" value="<?php echo $_GET['index']?>">
             <input type="submit" value="Submit">
@@ -42,6 +53,7 @@
     <?php } 
     else {
         $record = $_POST['quote'];
-        modifyFile($quote_file, $record, $_POST['index']);
+        modifyFile($quote_file, $record, $_POST['index'], $_POST['authors']);
+        print_r($_POST);
     }?>
 </body>
